@@ -54,6 +54,8 @@
 #include <winsock2.h>
 #include <shellapi.h>
 #pragma comment(lib, "Shell32.lib")
+#elif __APPLE__
+#include <crt_externs.h>
 #else
 #include <fstream>
 #include <unistd.h>
@@ -125,6 +127,11 @@ namespace getopt_utils
                     args.push_back( std::string( ws.begin(), ws.end() ) );
                 }
                 LocalFree(list);
+            }
+    #       elif __APPLE__
+            for (int i = 0; i < *_NSGetArgc(); ++i)
+            {
+                args.push_back((*_NSGetArgv())[i]);
             }
     #       else
             pid_t pid = getpid();
